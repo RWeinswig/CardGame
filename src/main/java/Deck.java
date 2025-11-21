@@ -4,7 +4,7 @@ public class Deck {
     ArrayList<Card> cards;
     int cardsLeft;
 
-    public Deck(ArrayList<Card> cards, String[] suits, int cardsLeft) {
+    public Deck(String[] ranks, String[] suits, int[] values) {
         cards = new ArrayList<Card>();
     for (String suit: suits) {
         for (int i=0; i< ranks.length; i++) {

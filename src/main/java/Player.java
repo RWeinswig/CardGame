@@ -11,12 +11,25 @@ public class Player {
         this.name = name;
     }
 
+    public Player(String name) {
+        hand = new ArrayList<Card>();
+        points = 0;
+        this.name = name;
+    }
     public void addPoints(int pointsToAdd) {
         points += pointsToAdd;
     }
 
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+
     public void addCard(Card card) {
         hand.add(card);
+    }
+
+    public void clearHand() {
+        hand.clear();
     }
 
     public String toString(){
