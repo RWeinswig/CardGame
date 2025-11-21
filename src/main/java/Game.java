@@ -42,11 +42,11 @@ public class Game {
 
             dealHands();
             printHands();
-
+            System.out.println("!!!!!!");
             int bonus = playerTurn();
 
-            computerTurn();
-            scoreRound(bonus);
+//            computerTurn();
+//            scoreRound(bonus);
         }
     }
 
@@ -70,10 +70,25 @@ public class Game {
             int energy = 3;
             int bonus = 0;
 
-            while (energy > 3) {
+            while (energy > 0) {
                 System.out.println("Energy: " + energy);
                 System.out.println("Make your selection. 1) Power Up 2) Change Suit 3) Pass");
+                String choice = sc.nextLine();
+
+                if (choice.equals("1")) {
+                    System.out.println("Which card index (1-3) do you want to power up: ");
+                    int index = sc.nextInt();
+                    Card card1 = player.getCard(index);
+                    int x = 14 - card1.getValue();
+                    int add = (int)(Math.random() * x) + 1;
+                    card1.powerUp(add);
+                    System.out.println(card1.getValue());
+                    return 2;
+                }
+
+
             }
+            return 3;
     }
 
     public void main(String[] args) {

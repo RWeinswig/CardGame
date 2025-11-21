@@ -33,6 +33,10 @@ public class Card {
         this.rank = rank;
     }
 
+    public void powerUp(int add) {
+        value += add;
+    }
+
     @Override
     public String toString() {
         return rank + " of " + suit;

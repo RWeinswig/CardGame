@@ -24,6 +24,10 @@ public class Player {
         return hand;
     }
 
+    public Card getCard(int index) {
+        return hand.get(index-1);
+    }
+
     public void addCard(Card card) {
         hand.add(card);
     }
