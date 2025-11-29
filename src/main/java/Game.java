@@ -7,6 +7,8 @@ public class Game {
         private static Player player;
         private static Player computer;
 
+        private static final String[] SUITS = {"Hearts","Clubs","Diamonds","Spades"};
+
 
         public Game() {
             sc = new Scanner(System.in);
@@ -29,7 +31,7 @@ public class Game {
         System.out.println("A 3-card battle game. Each round:");
         System.out.println("• You and computer draw 3 cards.");
         System.out.println("• You have 3 energy to spend:");
-        System.out.println("  1. Power Up (+2 value)");
+        System.out.println("  1. Power Up (+ random value to any card of your choice)");
         System.out.println("  2. Change Suit");
         System.out.println("  3. Pass (+1 bonus point)");
         System.out.println("• Hands are scored. Higher score wins the round.");
@@ -79,16 +81,44 @@ public class Game {
                     System.out.println("Which card index (1-3) do you want to power up: ");
                     int index = sc.nextInt();
                     Card card1 = player.getCard(index);
+
                     int x = 14 - card1.getValue();
                     int add = (int)(Math.random() * x) + 1;
                     card1.powerUp(add);
-                    System.out.println(card1.getValue());
-                    return 2;
+
+                    System.out.println("New Value: " + card1.getValue());
+                    energy --;
+                }
+
+                else if (choice.equals("2")) {
+                    System.out.println("Which card index (1-3) do you want to change: ");
+                    int index = sc.nextInt();
+                    sc.nextLine();
+
+                    Card card = player.getCard(index);
+
+                    System.out.println("Choose suit: 1) Hearts 2) Clubs 3) Diamonds 4) Spades");
+                    int suitChoice = sc.nextInt();
+                    sc.nextLine();
+
+                    card.setSuit(SUITS[suitChoice-1]);
+                    System.out.println("Suit changed to " + card.getSuit());
+                    energy --;
+                }
+
+                else if (choice.equals("3")) {
+                    System.out.println("You passed. +1 bonus point");
+                    bonus ++;
+                    energy --;
+                }
+
+                else {
+                    System.out.println("Invalid Choice. Please pick 1, 2, or 3.");
                 }
 
 
             }
-            return 3;
+            return bonus;
     }
 
     public void main(String[] args) {
