@@ -10,6 +10,12 @@ public class Game {
 
         private static final String[] SUITS = {"Hearts","Clubs","Diamonds","Spades"};
 
+        // Create and play the game
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.playGame();
+    }
+
 
         public Game() {
             // Create the scanner
@@ -329,17 +335,23 @@ public class Game {
             }
     }
 
+    // This is the method that scores each player's hand, and the round
     private void scoreRound(int bonus, int computerBonus) {
+            // We create two variables that store the score of each user
+            // Call on the handranking to evaluate hands
             int playerScore = HandRanking.evaluate(player.getHand());
             int computerScore = HandRanking.evaluate(computer.getHand());
 
+            // We add the bonus to each of the scores
             playerScore += bonus;
             computerScore += computerBonus;
 
+            // Print out the scores of both players
             System.out.println("\n   ROUND RESULTS   ");
             System.out.println("Your hand: " + player.getHand() + "  Score: " + playerScore);
             System.out.println("Computer hand: " + computer.getHand() + "  Score: " + computerScore);
 
+            // If the scores are equivalent
             if (playerScore == computerScore){
                 System.out.println("The round is a tie. Let's see who wins with the High Card!");
                 int p1 = player.getCard(0).getValue();
@@ -350,35 +362,39 @@ public class Game {
                 int c2 = computer.getCard(1).getValue();
                 int c3 = computer.getCard(2).getValue();
 
+                // Get all of the values and see who had the max score
+                // if the player had the highest card, add one to their score
                 if (Math.max(p1, Math.max(p2, p3)) > Math.max(c1, Math.max(c2, c3))) {
                     System.out.println(player.name + " has the high card! You get a point!");
                     playerScore ++;
                 }
+                // Otherwise if computer had higher card add one to their score
                 else if (Math.max(p1, Math.max(p2, p3)) < Math.max(c1, Math.max(c2, c3))) {
                     System.out.println("The computer  has the high card! It gets a point!");
                     computerScore ++;
                 }
+                // Otherwise nobody gets a point
                 else{
                     System.out.println("It's a tie! Nobody gets a point!");
                 }
+                // If computer wins round, they get bonus point
             } else if (playerScore < computerScore) {
                 System.out.println("The computer wins this round. They get a point!");
                 computerScore ++;
             }
+            // Otherwise player wins round and gets bonus point
             else{
                 System.out.println(player.name + " wins this round. You get a point!");
                 playerScore ++;
             }
 
+            // Add points of round to each player's score
             player.addPoints(playerScore);
             computer.addPoints(computerScore);
 
     }
 
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.playGame();
-    }
+
 
 
 }
