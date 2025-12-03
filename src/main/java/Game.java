@@ -207,13 +207,14 @@ public class Game {
             // Print the computer's hand
             printComputerHands();
 
-            // Get all three cards in the computer's hand
-        Card c1 = computer.getCard(0);
-        Card c2 = computer.getCard(1);
-        Card c3 = computer.getCard(2);
+
 
         // While the computer still has energy points
             while (energy > 0) {
+                // Get all three cards in the computer's hand
+                Card c1 = computer.getCard(0);
+                Card c2 = computer.getCard(1);
+                Card c3 = computer.getCard(2);
                 // Find the score of the computer's current hand
                 int handScore = HandRanking.evaluate(computer.getHand());
 
