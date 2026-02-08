@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Player {
-    ArrayList<Card> hand;
-    int points;
-    String name;
+    private ArrayList<Card> hand;
+    private int points;
+    private String name;
 
     public Player(ArrayList<Card> hand, String name) {
         this.hand = hand;
@@ -18,6 +18,14 @@ public class Player {
     }
     public void addPoints(int pointsToAdd) {
         points += pointsToAdd;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public ArrayList<Card> getHand() {

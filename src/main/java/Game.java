@@ -1,20 +1,18 @@
+// Card Game by Ryan Weinswig
+// February 24
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Game {
 
 
-        private static Scanner sc;
-        private static Deck deck;
-        private static Player player;
-        private static Player computer;
+        private  Scanner sc;
+        private  Deck deck;
+        private  Player player;
+        private  Player computer;
 
         private static final String[] SUITS = {"Hearts","Clubs","Diamonds","Spades"};
 
-        // Create and play the game
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.playGame();
-    }
+
 
 
         public Game() {
@@ -29,11 +27,10 @@ public class Game {
 
             // Create all of the arrays that store ranks of cards, and suits, as well as values
             String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-            String[] suits = {"Hearts","Clubs","Diamonds","Spades"};
             int[] values = {1,2,3,4,5,6,7,8,9,10,11,12,13};
 
             // Create the deck with all of the ranks, suits, and values, and create computer player and user
-            deck = new Deck(ranks, suits, values);
+            deck = new Deck(ranks, SUITS, values);
             player = new Player(name);
             computer = new Player("Computer");
         }
@@ -57,8 +54,8 @@ public class Game {
             System.out.println("\n              ROUND: " + round);
             // Print out the standings including user's and computer's points
             System.out.println("The current standings .............");
-            System.out.println(player.name + ": " + player.points);
-            System.out.println("Computer: " + computer.points);
+            System.out.println(player.getName() + ": " + player.getPoints());
+            System.out.println("Computer: " + computer.getPoints());
             // Deal the hands, and print them
             dealHands();
             printHands();
@@ -77,11 +74,11 @@ public class Game {
         System.out.println(" ");
 
         // Checks to see who won, and prints out message depending on who won
-        if (player.points > computer.points) {
-            System.out.println(player.name + " won!!!!!! Congratulations!!!");
+        if (player.getPoints() > computer.getPoints()) {
+            System.out.println(player.getName() + " won!!!!!! Congratulations!!!");
         }
 
-        else if (player.points < computer.points) {
+        else if (player.getPoints() < computer.getPoints()) {
             System.out.println("The computer won. Try again later. ");
         }
 
@@ -91,8 +88,8 @@ public class Game {
 
         // Prints out final standings and final points
         System.out.println("The final standings .............");
-        System.out.println(player.name + ": " + player.points);
-        System.out.println("Computer: " + computer.points);
+        System.out.println(player.getName() + ": " + player.getPoints());
+        System.out.println("Computer: " + computer.getPoints());
 
     }
 
@@ -245,7 +242,7 @@ public class Game {
                         System.out.println("Computer changed a card to improve their pair.");
                         printComputerHands();
                     }
-                    // Compute4r loses an energy point
+                    // Computer loses an energy point
                     energy--;
                 }
 
@@ -366,7 +363,7 @@ public class Game {
                 // Get all of the values and see who had the max score
                 // if the player had the highest card, add one to their score
                 if (Math.max(p1, Math.max(p2, p3)) > Math.max(c1, Math.max(c2, c3))) {
-                    System.out.println(player.name + " has the high card! You get a point!");
+                    System.out.println(player.getName() + " has the high card! You get a point!");
                     playerScore ++;
                 }
                 // Otherwise if computer had higher card add one to their score
@@ -385,7 +382,7 @@ public class Game {
             }
             // Otherwise player wins round and gets bonus point
             else{
-                System.out.println(player.name + " wins this round. You get a point!");
+                System.out.println(player.getName() + " wins this round. You get a point!");
                 playerScore ++;
             }
 
@@ -393,6 +390,12 @@ public class Game {
             player.addPoints(playerScore);
             computer.addPoints(computerScore);
 
+    }
+
+    // Create and play the game
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.playGame();
     }
 
 
