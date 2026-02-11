@@ -1,12 +1,24 @@
+import javax.swing.*;
+import java.awt.*;
+
 public class Card {
     private int value;
     private String suit;
     private String rank;
+    private int number;
+    private Image image;
+    private GameViewer cardMat;
+    private int x;
+    private int y;
+    private boolean show;
 
-    public Card(String rank, String suit, int value) {
+    public Card(String rank, String suit, int value, int number, GameViewer cardMat) {
         this.rank = rank;
         this.suit = suit;
         this.value = value;
+        this.number = number;
+        this.image = new ImageIcon("Resources/" + String.valueOf(number) +".png").getImage();
+        this.cardMat = cardMat;
     }
 
     public int getValue() {
@@ -37,9 +49,17 @@ public class Card {
         value += add;
     }
 
+    public boolean isShow() {
+        return show;
+    }
+
     @Override
     public String toString() {
         return rank + " of " + suit;
+    }
+
+    public void draw(Graphics g){
+        g.drawImage(image,200, 200, cardMat);
     }
 
 }

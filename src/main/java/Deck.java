@@ -1,15 +1,20 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Deck {
     private ArrayList<Card> cards;
     private int cardsLeft;
 
-    public Deck(String[] ranks, String[] suits, int[] values) {
+    public Deck(String[] ranks, String[] suits, int[] values, GameViewer window) {
         cards = new ArrayList<Card>();
         // Go through and add all of the suits and values
+        int counter = 0;
     for (String suit: suits) {
         for (int i=0; i< ranks.length; i++) {
-            cards.add(new Card(ranks[i], suit, values[i]));
+            cards.add(new Card(ranks[i], suit, values[i], counter, window));
+            counter ++;
+
         }
     }
 

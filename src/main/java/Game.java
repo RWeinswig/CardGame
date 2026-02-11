@@ -10,16 +10,19 @@ public class Game {
         private  Player player;
         private  Player computer;
 
-        private static final String[] SUITS = {"Hearts","Clubs","Diamonds","Spades"};
+        private static final String[] SUITS = {"Spades","Hearts","Diamonds","Clubs"};
+        private GameViewer window;
+
 
 
 
 
         public Game() {
+            window = new GameViewer(this);
             // Create the scanner
             sc = new Scanner(System.in);
             // Print out the manual to how to play the game
-            printInstructions();
+            //printInstructions();
 
             // Have user input name
             System.out.print("Enter your name: ");
@@ -30,23 +33,23 @@ public class Game {
             int[] values = {1,2,3,4,5,6,7,8,9,10,11,12,13};
 
             // Create the deck with all of the ranks, suits, and values, and create computer player and user
-            deck = new Deck(ranks, SUITS, values);
+            deck = new Deck(ranks, SUITS, values, window);
             player = new Player(name);
             computer = new Player("Computer");
         }
 
-    public void printInstructions() {
-            // Print out the instructions
-        System.out.println("=== TRIAD TACTICS ===");
-        System.out.println("A 3-card battle game. Each round:");
-        System.out.println("• You and computer draw 3 cards.");
-        System.out.println("• You have 3 energy to spend:");
-        System.out.println("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)");
-        System.out.println("  2. Change Suit");
-        System.out.println("  3. Pass (+1 bonus point)");
-        System.out.println("• Hands are scored. Higher score wins the round.");
-        System.out.println("• After 5 rounds, highest total wins.\n");
-    }
+//    public void printInstructions() {
+//            // Print out the instructions
+//        System.out.println("=== TRIAD TACTICS ===");
+//        System.out.println("A 3-card battle game. Each round:");
+//        System.out.println("• You and computer draw 3 cards.");
+//        System.out.println("• You have 3 energy to spend:");
+//        System.out.println("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)");
+//        System.out.println("  2. Change Suit");
+//        System.out.println("  3. Pass (+1 bonus point)");
+//        System.out.println("• Hands are scored. Higher score wins the round.");
+//        System.out.println("• After 5 rounds, highest total wins.\n");
+//    }
 
     public void playGame() {
             // Only play five rounds
@@ -114,8 +117,10 @@ public class Game {
 
             // Adds three cards to both computer and player
             for (int i = 0; i < 3; i++) {
-                player.addCard(deck.deal());
-                computer.addCard(deck.deal());
+                Card cardDealt = deck.deal();
+                player.addCard(cardDealt);
+                Card cardDealt2 = deck.deal();
+                computer.addCard(cardDealt2);
             }
         }
 
