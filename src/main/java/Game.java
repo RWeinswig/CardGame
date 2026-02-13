@@ -22,12 +22,15 @@ public class Game {
             // Create the scanner
             sc = new Scanner(System.in);
             // Print out the manual to how to play the game
-            //printInstructions();
+
 
             // Have user input name
             System.out.print("Enter your name: ");
             String name = sc.nextLine();
+
             window.hideInstructions();
+
+
 
             // Create all of the arrays that store ranks of cards, and suits, as well as values
             String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
@@ -37,6 +40,7 @@ public class Game {
             deck = new Deck(ranks, SUITS, values, window);
             player = new Player(name);
             computer = new Player("Computer");
+
         }
 
 
@@ -85,7 +89,6 @@ public class Game {
         System.out.println("Computer: " + computer.getPoints());
 
     }
-
     // Prints out users hand
     private void printHands() {
         System.out.println("Your hand: " + player.getHand());

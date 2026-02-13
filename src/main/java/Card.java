@@ -18,7 +18,7 @@ public class Card {
         this.value = value;
         this.number = number;
 
-        this.image = new ImageIcon("Resources/" + String.valueOf(number +1) +".png").getImage();
+        this.image = new ImageIcon("src/main/resources/" + String.valueOf(number) +".png").getImage();
         this.cardMat = cardMat;
     }
 
@@ -65,7 +65,7 @@ public class Card {
     }
 
     public void draw(Graphics g){
-        g.drawImage(image,x, y, cardMat);
+        g.drawImage(image,x, y, 100, 100, cardMat);
     }
 
 }

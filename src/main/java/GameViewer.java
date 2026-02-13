@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
+
 
 public class GameViewer extends JFrame {
 
@@ -22,8 +22,8 @@ public class GameViewer extends JFrame {
 
    @Override
     public void paint(Graphics g) {
-       g.setColor(Color.WHITE);
-       g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.WHITE);
+      g.fillRect(0, 0, getWidth(), getHeight());
 
         if (showInstructions) {
             drawInstructions(g);
@@ -34,17 +34,22 @@ public class GameViewer extends JFrame {
    }
 
    public void drawGame(Graphics g) {
+
         if (game.getPlayer() == null) {
             return;
         }
+
         int startX = 200;
         int y = 300;
-
         for (int i=0; i<game.getPlayer().getHand().size(); i++) {
             Card card = game.getPlayer().getCard(i);
             card.setPosition(startX + (i*150), y);
             card.draw(g);
         }
+   }
+
+   public void draw(Card card, Graphics g) {
+        card.draw(g);
    }
 
     private void drawInstructions(Graphics g) {
