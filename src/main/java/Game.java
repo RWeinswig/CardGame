@@ -27,6 +27,7 @@ public class Game {
             // Have user input name
             System.out.print("Enter your name: ");
             String name = sc.nextLine();
+            window.hideInstructions();
 
             // Create all of the arrays that store ranks of cards, and suits, as well as values
             String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
@@ -38,18 +39,6 @@ public class Game {
             computer = new Player("Computer");
         }
 
-//    public void printInstructions() {
-//            // Print out the instructions
-//        System.out.println("=== TRIAD TACTICS ===");
-//        System.out.println("A 3-card battle game. Each round:");
-//        System.out.println("• You and computer draw 3 cards.");
-//        System.out.println("• You have 3 energy to spend:");
-//        System.out.println("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)");
-//        System.out.println("  2. Change Suit");
-//        System.out.println("  3. Pass (+1 bonus point)");
-//        System.out.println("• Hands are scored. Higher score wins the round.");
-//        System.out.println("• After 5 rounds, highest total wins.\n");
-//    }
 
     public void playGame() {
             // Only play five rounds
@@ -61,6 +50,7 @@ public class Game {
             System.out.println("Computer: " + computer.getPoints());
             // Deal the hands, and print them
             dealHands();
+            window.repaint();
             printHands();
             System.out.println("!!!!!!");
             // This is the score of the number of times the user passed
@@ -122,6 +112,8 @@ public class Game {
                 Card cardDealt2 = deck.deal();
                 computer.addCard(cardDealt2);
             }
+
+            window.repaint();
         }
 
         // This is the method for the player's turn
@@ -397,10 +389,15 @@ public class Game {
 
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
     // Create and play the game
     public static void main(String[] args) {
         Game game = new Game();
         game.playGame();
+
     }
 
 

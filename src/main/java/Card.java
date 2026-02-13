@@ -17,7 +17,8 @@ public class Card {
         this.suit = suit;
         this.value = value;
         this.number = number;
-        this.image = new ImageIcon("Resources/" + String.valueOf(number) +".png").getImage();
+
+        this.image = new ImageIcon("Resources/" + String.valueOf(number +1) +".png").getImage();
         this.cardMat = cardMat;
     }
 
@@ -58,8 +59,13 @@ public class Card {
         return rank + " of " + suit;
     }
 
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public void draw(Graphics g){
-        g.drawImage(image,200, 200, cardMat);
+        g.drawImage(image,x, y, cardMat);
     }
 
 }
