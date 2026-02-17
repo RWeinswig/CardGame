@@ -8,11 +8,11 @@ public class Deck {
 
     public Deck(String[] ranks, String[] suits, int[] values, GameViewer window) {
         cards = new ArrayList<Card>();
-        // Go through and add all of the suits and values
+        // Go through and add all the suits and values
 
     for (int x=1; x<=4;x++) {
         for (int i=0; i< ranks.length; i++) {
-            cards.add(new Card(ranks[i], suits[x-1], values[i], i*4+x, window));
+            cards.add(new Card(suits[x-1], values[i], i*4+x, window));
 
         }
     }

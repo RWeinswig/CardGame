@@ -78,6 +78,10 @@ public class Game {
             int bonus2 = computerTurn();
             // Call the function which scores the round to see who won and to get the scores
             scoreRound(bonus, bonus2);
+            window.repaint();
+            window.drawScoreboard(window.getGraphics(), player.getPoints(), computer.getPoints(), round);
+            System.out.println("Press Enter to continue to next round: ");
+            sc.nextLine();
         }
 
         System.out.println(" ");
@@ -133,6 +137,8 @@ public class Game {
             window.repaint();
         }
 
+
+
         // This is the method for the player's turn
         private int playerTurn() {
             // User can do three things per turn
@@ -164,6 +170,8 @@ public class Game {
                     int add = (int)(Math.random() * howMuchToAdd) + 1;
                     // Power up the card
                     card1.powerUp(add);
+                    card1.updateImage();
+                    window.repaint();
 
                     // Print out new value of card, and of hand
                     // Subtract from energy now that turn is over
@@ -188,6 +196,8 @@ public class Game {
                     // Print out what the suit was changed to
                     System.out.println("Suit changed to " + card.getSuit());
                     energy --;
+                    card.updateImage();
+                    window.repaint();
                     // Print the hand and subtract one from energy
                     printHands();
                 }
@@ -236,6 +246,8 @@ public class Game {
                     bonus ++;
                     energy--;
                     printComputerHands();
+                    System.out.println("Press Enter to continue.....");
+                    sc.nextLine();
                 }
 
                 else if(handScore == 3) {
@@ -257,6 +269,8 @@ public class Game {
                         printComputerHands();
                     }
                     // Computer loses an energy point
+                    System.out.println("Press Enter to continue.....");
+                    sc.nextLine();
                     energy--;
                 }
 
@@ -281,6 +295,8 @@ public class Game {
                     }
 
                     // Uses an energy point
+                    System.out.println("Press Enter to continue.....");
+                    sc.nextLine();
                     energy--;
                 }
 
@@ -322,6 +338,8 @@ public class Game {
                         energy --;
                         printComputerHands();
                     }
+                    System.out.println("Press Enter to continue...");
+                    sc.nextLine();
                 }
 
             }

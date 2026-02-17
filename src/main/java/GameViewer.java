@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 
 public class GameViewer extends JFrame {
@@ -8,6 +9,7 @@ public class GameViewer extends JFrame {
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_HEIGHT = 1000;
     private boolean showInstructions = true;
+    private Image deckImage = new ImageIcon("src/main/resources/53.png").getImage();
 
 
     public GameViewer(Game game) {
@@ -38,6 +40,10 @@ public class GameViewer extends JFrame {
         int startX = 200;
         int computerY = 150;
 
+        g.setColor(Color.black);
+        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+        g.drawString("Computer's Hand", startX, computerY - 20);
+
        for (int i = 0; i < game.getComputer().getHand().size(); i++) {
            Card card = game.getComputer().getCard(i);
            card.setPosition(startX + (i * 150), computerY);
@@ -46,7 +52,8 @@ public class GameViewer extends JFrame {
            card.draw(g, game.isRevealComputerCards());
        }
 
-       int playerY = 500;
+       int playerY = 600;
+       g.drawString("Your Hand", startX, playerY - 20);
 
        for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
            Card card = game.getPlayer().getCard(i);
@@ -54,7 +61,29 @@ public class GameViewer extends JFrame {
 
            card.draw(g, true);
        }
+
+       Graphics2D g2d = (Graphics2D) g;
+
+       int deckX = getWidth() / 2 - 50;
+       int deckY = getHeight() / 2 - 50;
+
+       AffineTransform old = g2d.getTransform();
+       g2d.rotate(Math.toRadians(90), deckX + 50, deckY + 50);
+       for (int i = 0; i < 3; i++) {
+           g2d.drawImage(deckImage, deckX + i*3, deckY + i*3, 100, 100, this);
+       }
+       g2d.setTransform(old);
    }
+
+    public void drawScoreboard(Graphics g, int playerScore, int computerScore, int round) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.drawString("=== SCOREBOARD ===", 700, 100);
+        g.drawString("Round: " + round, 700, 130);
+        g.drawString(game.getPlayer().getName() + ": " + playerScore, 700, 160);
+        g.drawString("Computer: " + computerScore, 700, 190);
+
+    }
 
 
     private void drawInstructions(Graphics g) {
