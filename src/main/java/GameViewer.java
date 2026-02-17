@@ -35,22 +35,27 @@ public class GameViewer extends JFrame {
 
    public void drawGame(Graphics g) {
 
-        if (game.getPlayer() == null) {
-            return;
-        }
-
         int startX = 200;
-        int y = 300;
-        for (int i=0; i<game.getPlayer().getHand().size(); i++) {
-            Card card = game.getPlayer().getCard(i);
-            card.setPosition(startX + (i*150), y);
-            card.draw(g);
-        }
+        int computerY = 150;
+
+       for (int i = 0; i < game.getComputer().getHand().size(); i++) {
+           Card card = game.getComputer().getCard(i);
+           card.setPosition(startX + (i * 150), computerY);
+
+           // Only show face up if allowed
+           card.draw(g, game.isRevealComputerCards());
+       }
+
+       int playerY = 500;
+
+       for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
+           Card card = game.getPlayer().getCard(i);
+           card.setPosition(startX + (i * 150), playerY);
+
+           card.draw(g, true);
+       }
    }
 
-   public void draw(Card card, Graphics g) {
-        card.draw(g);
-   }
 
     private void drawInstructions(Graphics g) {
         g.setColor(Color.BLACK);

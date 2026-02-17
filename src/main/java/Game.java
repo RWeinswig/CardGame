@@ -13,8 +13,7 @@ public class Game {
         private static final String[] SUITS = {"Spades","Hearts","Diamonds","Clubs"};
         private GameViewer window;
 
-
-
+    private boolean revealComputerCards = false;
 
 
         public Game() {
@@ -43,6 +42,18 @@ public class Game {
 
         }
 
+        public boolean isRevealComputerCards() {
+            return revealComputerCards;
+        }
+
+    public void setRevealComputerCards(boolean reveal) {
+        this.revealComputerCards = reveal;
+    }
+
+    public Player getComputer() {
+        return computer;
+    }
+
 
     public void playGame() {
             // Only play five rounds
@@ -60,6 +71,8 @@ public class Game {
             // This is the score of the number of times the user passed
             // Call the player's turn
             int bonus = playerTurn();
+            setRevealComputerCards(true);
+            window.repaint();
 
             // Call the computer's turn and score the bonus
             int bonus2 = computerTurn();
@@ -108,12 +121,13 @@ public class Game {
             // Shuffles the deck
             deck.shuffle();
 
+            setRevealComputerCards(false);
+
             // Adds three cards to both computer and player
             for (int i = 0; i < 3; i++) {
-                Card cardDealt = deck.deal();
-                player.addCard(cardDealt);
-                Card cardDealt2 = deck.deal();
-                computer.addCard(cardDealt2);
+
+                player.addCard(deck.deal());
+                computer.addCard(deck.deal());
             }
 
             window.repaint();

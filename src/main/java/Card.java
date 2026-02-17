@@ -7,6 +7,9 @@ public class Card {
     private String rank;
     private int number;
     private Image image;
+
+    private static Image backImage = new ImageIcon("src/main/resources/53.png").getImage();
+
     private GameViewer cardMat;
     private int x;
     private int y;
@@ -64,8 +67,12 @@ public class Card {
         this.y = y;
     }
 
-    public void draw(Graphics g){
-        g.drawImage(image,x, y, 100, 100, cardMat);
+    public void draw(Graphics g, boolean faceUp){
+        if (faceUp) {
+            g.drawImage(image, x, y, 100, 100, cardMat);
+        } else {
+            g.drawImage(backImage, x, y, 100, 100, cardMat);
+        }
     }
 
 }
