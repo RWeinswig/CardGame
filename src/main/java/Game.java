@@ -74,6 +74,9 @@ public class Game {
             setRevealComputerCards(true);
             window.repaint();
 
+            System.out.println("Computer reveals its hand. Press Enter to continue...");
+            sc.nextLine();
+
             // Call the computer's turn and score the bonus
             int bonus2 = computerTurn();
             // Call the function which scores the round to see who won and to get the scores
@@ -170,7 +173,6 @@ public class Game {
                     int add = (int)(Math.random() * howMuchToAdd) + 1;
                     // Power up the card
                     card1.powerUp(add);
-                    card1.updateImage();
                     window.repaint();
 
                     // Print out new value of card, and of hand
@@ -196,7 +198,6 @@ public class Game {
                     // Print out what the suit was changed to
                     System.out.println("Suit changed to " + card.getSuit());
                     energy --;
-                    card.updateImage();
                     window.repaint();
                     // Print the hand and subtract one from energy
                     printHands();
@@ -246,8 +247,6 @@ public class Game {
                     bonus ++;
                     energy--;
                     printComputerHands();
-                    System.out.println("Press Enter to continue.....");
-                    sc.nextLine();
                 }
 
                 else if(handScore == 3) {
@@ -255,22 +254,40 @@ public class Game {
 
                     // Computer will try to get a 3 of a kind. This means changing value of only one not the same
                     if (c1.getValue() != c2.getValue() && c1.getValue() != c3.getValue()) {
-                        c1.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-                        System.out.println("Computer changed a card to improve their pair.");
-                        printComputerHands();
+                        int maxAdd = 13 - c1.getValue();
+                        if (maxAdd > 0) {
+                            int add = (int) (Math.random() * maxAdd) + 1;
+                            System.out.println("Computer changed a card to improve their pair.");
+                            c1.powerUp(add);
+                            window.repaint();
+                            System.out.println("Computer powered up a card to try for a three of a kind.");
+                            printComputerHands();
+                        }
                     }
                     else if (c2.getValue() != c1.getValue() && c2.getValue() != c3.getValue()) {
-                        c2.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-                        System.out.println("Computer changed a card to improve their pair.");
-                        printComputerHands();
-                    } else if (c3.getValue() != c1.getValue() && c3.getValue() != c2.getValue()) {
-                        c3.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-                        System.out.println("Computer changed a card to improve their pair.");
-                        printComputerHands();
+                        int maxAdd = 13 - c2.getValue();
+                        if (maxAdd > 0) {
+                            int add = (int) (Math.random() * maxAdd) + 1;
+                            System.out.println("Computer changed a card to improve their pair.");
+                            c2.powerUp(add);
+                            window.repaint();
+                            System.out.println("Computer powered up a card to try for a three of a kind.");
+                            printComputerHands();
+                        }
+                    }
+                    else if (c3.getValue() != c1.getValue() && c3.getValue() != c2.getValue()) {
+                        int maxAdd = 13 - c3.getValue();
+                        if (maxAdd > 0) {
+                            int add = (int) (Math.random() * maxAdd) + 1;
+                            System.out.println("Computer changed a card to improve their pair.");
+                            c3.powerUp(add);
+                            window.repaint();
+                            System.out.println("Computer powered up a card to try for a three of a kind.");
+                            printComputerHands();
+                        }
                     }
                     // Computer loses an energy point
-                    System.out.println("Press Enter to continue.....");
-                    sc.nextLine();
+
                     energy--;
                 }
 
@@ -282,21 +299,23 @@ public class Game {
                     // Then try to change it in order to get that flush
                     if (!c1.getSuit().equals(c2.getSuit()) && !c1.getSuit().equals(c3.getSuit())) {
                         c1.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
+                        window.repaint();
                         System.out.println("Computer changed a card's suit to try for a flush.");
                         printComputerHands();
                     } else if (!c2.getSuit().equals(c1.getSuit()) && !c2.getSuit().equals(c3.getSuit())) {
                         c2.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
+                        window.repaint();
                         System.out.println("Computer changed a card's suit to try for a flush.");
                         printComputerHands();
                     } else if (!c3.getSuit().equals(c1.getSuit()) && !c3.getSuit().equals(c2.getSuit())) {
                         c3.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
+                        window.repaint();
                         System.out.println("Computer changed a card's suit to try for a flush.");
                         printComputerHands();
                     }
 
                     // Uses an energy point
-                    System.out.println("Press Enter to continue.....");
-                    sc.nextLine();
+
                     energy--;
                 }
 
@@ -311,6 +330,7 @@ public class Game {
                         Card card = computer.getCard(index);
                         int add = (int)(Math.random() * (13 - card.getValue()));
                         card.powerUp(add);
+                        window.repaint();
                         System.out.println("The computer powered up a card. ");
                         // Loses one energy point and prints out hand
                         energy -- ;
@@ -323,6 +343,7 @@ public class Game {
                         int index = (int)(Math.random() * 3);
                         Card card = computer.getCard(index);
                         card.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
+                        window.repaint();
                         System.out.println("The computer changed one of its suits");
                         // Subtract an energy point
                         // print out the computer hands
@@ -338,12 +359,12 @@ public class Game {
                         energy --;
                         printComputerHands();
                     }
-                    System.out.println("Press Enter to continue...");
-                    sc.nextLine();
                 }
-
+                System.out.println("Press Enter to continue...");
+                sc.nextLine();
             }
             // Returns the bonus the computer has accumulated
+
         return bonus;
     }
 
