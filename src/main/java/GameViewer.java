@@ -76,12 +76,35 @@ public class GameViewer extends JFrame {
    }
 
     public void drawScoreboard(Graphics g, int playerScore, int computerScore, int round) {
+        int bottom = getHeight() - 50;
+        int top = 50;
+        int barMaxHeight = bottom - top;
+        int MAX_SCORE = 100;
+
+
+
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(600, 80, 300, 160);
+        g.setColor(Color.WHITE);
+        g.drawRect(600, 80, 300, 160);
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.setFont(new Font("SansSerif", Font.BOLD, 18));
         g.drawString("=== SCOREBOARD ===", 700, 100);
+        g.setFont(new Font("SansSerif", Font.BOLD, 16));
+        g.setColor(Color.CYAN);
         g.drawString("Round: " + round, 700, 130);
-        g.drawString(game.getPlayer().getName() + ": " + playerScore, 700, 160);
-        g.drawString("Computer: " + computerScore, 700, 190);
+        g.setColor(Color.GREEN);
+        g.drawString(game.getPlayer().getName() + ": " + playerScore, 650, 170);
+        g.setColor(Color.RED);
+        g.drawString("Computer: " + computerScore, 650, 200);
+
+        int playerHeight = (int)((playerScore / (double)MAX_SCORE) * barMaxHeight);
+        int computerHeight = (int)((computerScore / (double)MAX_SCORE) * barMaxHeight);
+        g.setColor(Color.GREEN);
+
+        g.fillRect(650, bottom - playerHeight, 60, playerHeight);
+        g.setColor(Color.RED);
+        g.fillRect(750, bottom - computerHeight, 60, computerHeight);
 
     }
 

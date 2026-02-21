@@ -55,6 +55,12 @@ public class Game {
     }
 
 
+    private void hideHands() {
+            player.clearHand();
+            computer.clearHand();
+            window.repaint();
+    }
+
     public void playGame() {
             // Only play five rounds
         for (int round = 1; round <= 5; round++) {
@@ -79,9 +85,11 @@ public class Game {
 
             // Call the computer's turn and score the bonus
             int bonus2 = computerTurn();
+
             // Call the function which scores the round to see who won and to get the scores
             scoreRound(bonus, bonus2);
-            window.repaint();
+
+            hideHands();
             window.drawScoreboard(window.getGraphics(), player.getPoints(), computer.getPoints(), round);
             System.out.println("Press Enter to continue to next round: ");
             sc.nextLine();
