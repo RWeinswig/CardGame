@@ -5,10 +5,16 @@ import java.awt.geom.AffineTransform;
 
 public class GameViewer extends JFrame {
 
+    // Gives the frontend access to the backend
     private Game game;
+
+    // Height and Width of the board
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_HEIGHT = 1000;
+
+    // Used to determine when to show the Instructions
     private boolean showInstructions = true;
+    // Gives us access to the image that represents the deck, or just the back image of a card
     private Image deckImage = new ImageIcon("src/main/resources/53.png").getImage();
 
 
@@ -40,28 +46,38 @@ public class GameViewer extends JFrame {
 
    public void drawGame(Graphics g) {
 
-        int startX = 200;
+        // X coordinate of the first card for both computer and player
+       int startX = 200;
+        // Y coordinate of all of the computer's cards
         int computerY = 150;
 
+        // Sets the color to black and prints out description that says computer's hand
         g.setColor(Color.black);
         g.setFont(new Font("SansSerif", Font.BOLD, 18));
         g.drawString("Computer's Hand", startX, computerY - 20);
 
+        // Prints out the amount of energy points computer has
        g.setColor(Color.BLUE);
-       g.setFont(new Font("SansSerif", Font.BOLD, 18));
        g.drawString("Energy: " + game.getComputerEnergy(), startX - 120, computerY);
 
+       // Casts g object to more advanced 2d version, in order to access stroke width
+       Graphics2D g2 = (Graphics2D) g;
+
+
+       // Draws the cards on the screen in the correct locations
        for (int i = 0; i < game.getComputer().getHand().size(); i++) {
            Card card = game.getComputer().getCard(i);
            card.setPosition(startX + (i * 150), computerY);
 
-           // Only show face up if allowed
            card.draw(g, game.isRevealComputerCards());
        }
 
+       // If the computer won the round
+       // This draws a golden box around their cards to signal they won
        if (game.getRoundWinner().equals("COMPUTER")) {
-           Graphics2D g2 = (Graphics2D) g;
+
            g2.setColor(new Color(212, 175, 55)); // gold
+           // Width of the stroke
            g2.setStroke(new BasicStroke(6));
 
            int width = 150 * game.getComputer().getHand().size();
@@ -70,12 +86,15 @@ public class GameViewer extends JFrame {
 
 
 
+       // Y coordinate of all the cards
        int playerY = 600;
 
+        // Draws the user's energy points on the screen and a description that says user's cards
        g.drawString("Your Hand", startX, playerY - 20);
        g.setColor(Color.MAGENTA);
        g.drawString("Energy: " + game.getPlayerEnergy(), startX - 120, playerY);
 
+       // Draws all of the user's cards
        for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
            Card card = game.getPlayer().getCard(i);
            card.setPosition(startX + (i * 150), playerY);
@@ -84,7 +103,6 @@ public class GameViewer extends JFrame {
        }
 
        if (game.getRoundWinner().equals("PLAYER")) {
-           Graphics2D g2 = (Graphics2D) g;
            g2.setColor(new Color(212, 175, 55)); // gold
            g2.setStroke(new BasicStroke(6));
 
@@ -92,17 +110,17 @@ public class GameViewer extends JFrame {
            g2.drawRect(startX - 20, playerY - 30, width + 40, 150);
        }
 
-       Graphics2D g2d = (Graphics2D) g;
+
 
        int deckX = getWidth() / 2 - 50;
        int deckY = getHeight() / 2 - 50;
 
-       AffineTransform old = g2d.getTransform();
-       g2d.rotate(Math.toRadians(90), deckX + 50, deckY + 50);
+       AffineTransform old = g2.getTransform();
+       g2.rotate(Math.toRadians(90), deckX + 50, deckY + 50);
        for (int i = 0; i < 3; i++) {
-           g2d.drawImage(deckImage, deckX + i*3, deckY + i*3, 100, 100, this);
+           g2.drawImage(deckImage, deckX + i*3, deckY + i*3, 100, 100, this);
        }
-       g2d.setTransform(old);
+       g2.setTransform(old);
    }
 
     public void drawScoreboard(Graphics g, int playerScore, int computerScore, int round) {
@@ -162,17 +180,18 @@ public class GameViewer extends JFrame {
         g2.setColor(new Color(212, 175, 55));
 
         g2.drawRect(300, 260, 400, 60);
+        g.setFont(new Font("SansSerif", Font.BOLD, 40));
         if (playerWon) {
-            g.setFont(new Font("SansSerif", Font.BOLD, 40));
+
             g.drawString(game.getPlayer().getName() + " WINS!", 350, 450);
         }
         else if (computerWon) {
             g2.drawRect(300, 310, 400, 60);
-            g.setFont(new Font("SansSerif", Font.BOLD, 40));
+
             g.drawString("COMPUTER WINS!", 350, 450);
         }
         else {
-            g.setFont(new Font("SansSerif", Font.BOLD, 40));
+
             g.drawString("IT'S A TIE!", 380, 450);
         }
 

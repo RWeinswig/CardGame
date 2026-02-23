@@ -192,28 +192,39 @@ public class Game {
                 String choice = sc.nextLine();
 
                 // If the user wanted to power up
-                if (choice.equals("1")) {
+                if (choice.equals("1") ) {
                     // Get the card index they want to power up
                     System.out.println("Which card index (1-3) do you want to power up: ");
                     int index = sc.nextInt() - 1;
                     sc.nextLine();
                     // Get the card the player wanted to power up
-                    Card card1 = player.getCard(index);
+                    if (index > 3 || index < 0) {
+                        System.out.println("Not a possible index. Start your turn over");
 
-                    // 13 is the highest value a card can have
-                    // We want to add a random number to it, but not go over 13
-                    // That is what howMuchToAdd does, finds value to add
-                    int howMuchToAdd = 13 - card1.getValue();
-                    int add = (int)(Math.random() * howMuchToAdd) + 1;
-                    // Power up the card
-                    card1.powerUp(add);
-                    window.repaint();
+                    }
+                    else {
+                        Card card1 = player.getCard(index);
 
-                    // Print out new value of card, and of hand
-                    // Subtract from energy now that turn is over
-                    System.out.println("New Value: " + card1.getValue());
-                    playerEnergy --;
-                    printHands();
+                        // 13 is the highest value a card can have
+                        // We want to add a random number to it, but not go over 13
+                        // That is what howMuchToAdd does, finds value to add
+                        if (card1.getValue() != 13) {
+                            int howMuchToAdd = 13 - card1.getValue();
+                            int add = (int) (Math.random() * howMuchToAdd) + 1;
+                            // Power up the card
+                            card1.powerUp(add);
+                            window.repaint();
+                        } else {
+                            System.out.println("You can't power up a king!");
+                        }
+
+
+                        // Print out new value of card, and of hand
+                        // Subtract from energy now that turn is over
+                        System.out.println("New Value: " + card1.getValue());
+                        playerEnergy--;
+                        printHands();
+                    }
                 }
 
                 // If the user chose to change the suit
@@ -224,17 +235,22 @@ public class Game {
                     sc.nextLine();
 
                     // Get the card that they want to change
-                    Card card = player.getCard(index);
+                    if (index > 3 || index < 0) {
+                        System.out.println("Not a possible index. Start your turn over");
+
+                    } else {
+                        Card card = player.getCard(index);
 
 
-                    // Set the suit to a random suit, suit might not change
-                    card.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-                    // Print out what the suit was changed to
-                    System.out.println("Suit changed to " + card.getSuit());
-                    playerEnergy --;
-                    window.repaint();
-                    // Print the hand and subtract one from energy
-                    printHands();
+                        // Set the suit to a random suit, suit might not change
+                        card.setSuit(SUITS[(int) (Math.random() * SUITS.length)]);
+                        // Print out what the suit was changed to
+                        System.out.println("Suit changed to " + card.getSuit());
+                        playerEnergy--;
+                        window.repaint();
+                        // Print the hand and subtract one from energy
+                        printHands();
+                    }
                 }
 
                 // if they chose to pass, give the user one bonus point and take one energy point away
