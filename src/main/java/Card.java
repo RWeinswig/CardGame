@@ -1,47 +1,53 @@
+// Card Game by Ryan Weinswig
+// February 25
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Card {
+    // Constants
+    private static final int CARD_WIDTH = 80;
+    private static final int CARD_HEIGHT = 120;
+    private static Image backImage = new ImageIcon("src/main/resources/53.png").getImage();
+    private static final String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+
+
+    // Instance variables
     private int value;
     private String suit;
     private int number;
     private Image image;
-    private String rank;
 
-    private static Image backImage = new ImageIcon("src/main/resources/53.png").getImage();
-    private static final String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
 
-    private GameViewer cardMat;
     private int x;
     private int y;
-    private boolean show;
 
-    public Card(String suit, int value, int number, GameViewer cardMat) {
+
+    private GameViewer viewer;
+
+    // Creates a card with a given suit, value, and image number.
+    // Loads corresponding image
+    public Card(String suit, int value, int number, GameViewer viewer) {
 
         this.suit = suit;
         this.value = value;
         this.number = number;
-        this.rank = ranks[value - 1];
+        this.viewer = viewer;
 
-        this.image = new ImageIcon("src/main/resources/" + String.valueOf(number) +".png").getImage();
-        this.cardMat = cardMat;
+        updateImage();
     }
 
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-
-
-        int rankIndex = (value - 1) % 13;
-        this.rank = ranks[rankIndex];
-        updateImage();
-    }
-
     public String getSuit() {
         return suit;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+        updateImage();
     }
 
     public void setSuit(String suit) {
@@ -50,54 +56,30 @@ public class Card {
     }
 
 
-
-
-
     public void powerUp(int add) {
         setValue(value + add);
     }
 
-    public boolean isShow() {
-        return show;
-    }
-
+    // Updates the card's image based on its current value and suit
+    // Uses rank index and suit index to calculate correct image filler
     public void updateImage() {
-        int suitIndex = 0;
+        int suitIndex = getSuitIndex();
+        int rankIndex = value - 1;
 
-        switch(suit) {
-            case "Spades": suitIndex = 0; break;
-            case "Hearts": suitIndex = 1; break;
-            case "Diamonds": suitIndex = 2; break;
-            case "Clubs": suitIndex = 3; break;
+        number = rankIndex * 4 + (suitIndex + 1);
 
-        }
-
-        int rankIndex = 0;
-        switch(rank) {
-            case "A": rankIndex = 0; break;
-            case "2": rankIndex = 1; break;
-            case "3": rankIndex = 2; break;
-            case "4": rankIndex = 3; break;
-            case "5": rankIndex = 4; break;
-            case "6": rankIndex = 5; break;
-            case "7": rankIndex = 6; break;
-            case "8": rankIndex = 7; break;
-            case "9": rankIndex = 8; break;
-            case "10": rankIndex = 9; break;
-            case "J": rankIndex = 10; break;
-            case "Q": rankIndex = 11; break;
-            case "K": rankIndex = 12; break;
-        }
-
-        number = rankIndex * 4 + (suitIndex + 1); // Same logic as Deck constructor
         image = new ImageIcon("src/main/resources/" + number + ".png").getImage();
     }
 
-
-    @Override
-    public String toString() {
-        String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-        return ranks[value - 1] + " of " + suit;
+    // Returns the correct value depending on what suit the card is
+    private int getSuitIndex() {
+        switch (suit) {
+            case "Spades": return 0;
+            case "Hearts": return 1;
+            case "Diamonds": return 2;
+            case "Clubs": return 3;
+        }
+        return -1;
     }
 
     public void setPosition(int x, int y) {
@@ -105,12 +87,20 @@ public class Card {
         this.y = y;
     }
 
+    // Draws the card on the screen
+    // If the faceUp is false, draws the back of the card instead
     public void draw(Graphics g, boolean faceUp){
         if (faceUp) {
-            g.drawImage(image, x, y, 80, 120, cardMat);
+            g.drawImage(image, x, y, CARD_WIDTH, CARD_HEIGHT, viewer);
         } else {
-            g.drawImage(backImage, x, y, 80, 120, cardMat);
+            g.drawImage(backImage, x, y, CARD_WIDTH, CARD_HEIGHT, viewer);
         }
+    }
+
+    @Override
+    public String toString() {
+        String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+        return ranks[value - 1] + " of " + suit;
     }
 
 }

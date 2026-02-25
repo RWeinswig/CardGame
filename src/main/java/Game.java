@@ -1,54 +1,57 @@
 // Card Game by Ryan Weinswig
-// February 24
+// February 25
+
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Game {
 
-        private String roundWinner = "";
-        private int playerEnergy = 3;
-        private int computerEnergy = 3;
+    private static final int ROUNDS = 5;
+    private static final int CARDS_PER_HAND = 3;
+    private static final int STARTING_ENERGY = 3;
+    private static final int MAX_CARD_VALUE = 13;
+    private static final String[] SUITS = {"Spades", "Hearts", "Diamonds", "Clubs"};
 
-        private  Scanner sc;
-        private  Deck deck;
-        private  Player player;
-        private  Player computer;
-
-        private static final String[] SUITS = {"Spades","Hearts","Diamonds","Clubs"};
-        private GameViewer window;
-
+    // Instance variables
     private boolean revealComputerCards = false;
     private boolean gameOver = false;
 
+    private String roundWinner = "";
 
-        public Game() {
-            window = new GameViewer(this);
-            // Create the scanner
-            sc = new Scanner(System.in);
-            // Print out the manual to how to play the game
+    private int playerEnergy;
+    private int computerEnergy;
 
-
-            // Have user input name
-            System.out.print("Enter your name: ");
-            String name = sc.nextLine();
-
-            window.hideInstructions();
+    private Scanner sc;
+    private Deck deck;
+    private Player player;
+    private Player computer;
+    private GameViewer window;
 
 
+    // Initializes the game, creates players, deck, scanner, and GUI
+    public Game() {
+        window = new GameViewer(this);
+        sc = new Scanner(System.in);
 
-            // Create all of the arrays that store ranks of cards, and suits, as well as values
-            String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
-            int[] values = {1,2,3,4,5,6,7,8,9,10,11,12,13};
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
 
-            // Create the deck with all of the ranks, suits, and values, and create computer player and user
-            deck = new Deck(ranks, SUITS, values, window);
-            player = new Player(name);
-            computer = new Player("Computer");
+        window.hideInstructions();
 
-        }
+        // Create all of the arrays that store ranks of cards, and suits, as well as values
+        String[] ranks = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
-        public boolean isRevealComputerCards() {
-            return revealComputerCards;
-        }
+        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+
+        deck = new Deck(ranks, SUITS, values, window);
+
+        player = new Player(name);
+        computer = new Player("Computer");
+
+    }
+
+    public boolean isRevealComputerCards() {
+        return revealComputerCards;
+    }
 
     public String getRoundWinner() {
         return roundWinner;
@@ -66,76 +69,49 @@ public class Game {
         return gameOver;
     }
 
+    // Clears the hands of both the player and the computer
+    // Then repaints, and neither player will have cards so nothing shows up
     private void hideHands() {
-            player.clearHand();
-            computer.clearHand();
-            roundWinner = "";
-            window.repaint();
+        player.clearHand();
+        computer.clearHand();
+        roundWinner = "";
+        window.repaint();
     }
 
     public void playGame() {
-            // Only play five rounds
-        for (int round = 1; round <= 5; round++) {
-            playerEnergy = 3;
-            computerEnergy = 3;
-            System.out.println("\n              ROUND: " + round);
-            // Print out the standings including user's and computer's points
-            System.out.println("The current standings .............");
-            System.out.println(player.getName() + ": " + player.getPoints());
-            System.out.println("Computer: " + computer.getPoints());
-            // Deal the hands, and print them
-            dealHands();
+        // Only play five rounds
+        for (int round = 1; round <= ROUNDS; round++) {
+
+            startRound(round);
+            int playerBonus = playerTurn();
+
+            revealComputerCards = true;
             window.repaint();
-            printHands();
-            System.out.println("!!!!!!");
-            // This is the score of the number of times the user passed
-            // Call the player's turn
-            int bonus = playerTurn();
-            setRevealComputerCards(true);
+            waitForEnter();
+
+            int computerBonus = computerTurn();
+            scoreRound(playerBonus, computerBonus);
             window.repaint();
-
-            System.out.println("Computer reveals its hand. Press Enter to continue...");
-            sc.nextLine();
-
-            // Call the computer's turn and score the bonus
-            int bonus2 = computerTurn();
-
-            // Call the function which scores the round to see who won and to get the scores
-            scoreRound(bonus, bonus2);
-            window.repaint();
-            System.out.println("Press Enter to continue...");
-            sc.nextLine();
-
+            System.out.println("\nWinner is highlighted for this round! Press Enter to see the scoreboard: ");
+            waitForEnter();
             hideHands();
             window.drawScoreboard(window.getGraphics(), player.getPoints(), computer.getPoints(), round);
-            System.out.println("Press Enter to continue to next round: ");
-            sc.nextLine();
+            System.out.println("\nHere is the scoreboard! Press enter to continue to the next round: ");
+            waitForEnter();
+
         }
-
-        System.out.println(" ");
-        System.out.println(" ");
-
-        // Checks to see who won, and prints out message depending on who won
-        if (player.getPoints() > computer.getPoints()) {
-            System.out.println(player.getName() + " won!!!!!! Congratulations!!!");
-        }
-
-        else if (player.getPoints() < computer.getPoints()) {
-            System.out.println("The computer won. Try again later. ");
-        }
-
-        else{
-            System.out.println("BOOOOO. It was a tie.");
-        }
-
-        // Prints out final standings and final points
-        System.out.println("The final standings .............");
-        System.out.println(player.getName() + ": " + player.getPoints());
-        System.out.println("Computer: " + computer.getPoints());
-        gameOver = true;
-        window.repaint();
+        endGame();
 
     }
+
+    private void startRound(int round) {
+        playerEnergy = STARTING_ENERGY;
+        computerEnergy = STARTING_ENERGY;
+
+        dealHands();
+        window.repaint();
+    }
+
     // Prints out users hand
     private void printHands() {
         System.out.println("Your hand: " + player.getHand());
@@ -147,278 +123,221 @@ public class Game {
     }
 
     // This method deals the hands to both the computer and user
-        private void dealHands() {
-            // Resets their hand so they are empty
-            player.clearHand();
-            computer.clearHand();
+    private void dealHands() {
+        // Resets their hand so they are empty
+        player.clearHand();
+        computer.clearHand();
 
-            // Shuffles the deck
-            deck.shuffle();
+        // Shuffles the deck
+        deck.shuffle();
+        // Show the cards
+        setRevealComputerCards(false);
 
-            setRevealComputerCards(false);
+        // Adds three cards to both computer and player
+        for (int i = 0; i < CARDS_PER_HAND; i++) {
 
-            // Adds three cards to both computer and player
-            for (int i = 0; i < 3; i++) {
-
-                player.addCard(deck.deal());
-                computer.addCard(deck.deal());
-            }
-
-            window.repaint();
+            player.addCard(deck.deal());
+            computer.addCard(deck.deal());
         }
+    }
 
 
-        public int getPlayerEnergy() {
-            return playerEnergy;
-        }
+
+    private void waitForEnter() {
+        System.out.println("Press Enter to continue...");
+        sc.nextLine();
+    }
+
+
+    public int getPlayerEnergy() {
+        return playerEnergy;
+    }
 
     public int getComputerEnergy() {
         return computerEnergy;
     }
 
     // This is the method for the player's turn
-        private int playerTurn() {
-            // User can do three things per turn
+    private int playerTurn() {
+        // User can do three things per turn
 
-            // User has 0 bonus points at beginning of round
-            int bonus = 0;
+        // User has 0 bonus points at beginning of round
+        int bonus = 0;
 
-            // Run their turn while they have some energy points remaining
-            while (playerEnergy > 0) {
-                // Print out the user's energy points remaining for the round
-                System.out.println("Energy: " + playerEnergy);
-                // User makes their selection of what they want to do with their energy point
-                System.out.println("Make your selection. 1) Power Up 2) Change Suit 3) Pass");
-                String choice = sc.nextLine();
+        // Run their turn while they have some energy points remaining
+        while (playerEnergy > 0) {
+            // Print out the user's energy points remaining for the round
+            System.out.println("Energy: " + playerEnergy);
+            // User makes their selection of what they want to do with their energy point
+            System.out.println("Make your selection. 1) Power Up 2) Change Suit 3) Pass");
 
-                // If the user wanted to power up
-                if (choice.equals("1") ) {
-                    // Get the card index they want to power up
-                    System.out.println("Which card index (1-3) do you want to power up: ");
-                    int index = sc.nextInt() - 1;
-                    sc.nextLine();
-                    // Get the card the player wanted to power up
-                    if (index > 3 || index < 0) {
-                        System.out.println("Not a possible index. Start your turn over");
+            String choice = sc.nextLine();
 
-                    }
-                    else {
-                        Card card1 = player.getCard(index);
-
-                        // 13 is the highest value a card can have
-                        // We want to add a random number to it, but not go over 13
-                        // That is what howMuchToAdd does, finds value to add
-                        if (card1.getValue() != 13) {
-                            int howMuchToAdd = 13 - card1.getValue();
-                            int add = (int) (Math.random() * howMuchToAdd) + 1;
-                            // Power up the card
-                            card1.powerUp(add);
-                            window.repaint();
-                        } else {
-                            System.out.println("You can't power up a king!");
-                        }
-
-
-                        // Print out new value of card, and of hand
-                        // Subtract from energy now that turn is over
-                        System.out.println("New Value: " + card1.getValue());
-                        playerEnergy--;
-                        printHands();
-                    }
-                }
-
-                // If the user chose to change the suit
-                else if (choice.equals("2")) {
-                    // Ask the user what suit they would like to change
-                    System.out.println("Which card index (1-3) do you want to change: ");
-                    int index = sc.nextInt() - 1;
-                    sc.nextLine();
-
-                    // Get the card that they want to change
-                    if (index > 3 || index < 0) {
-                        System.out.println("Not a possible index. Start your turn over");
-
-                    } else {
-                        Card card = player.getCard(index);
-
-
-                        // Set the suit to a random suit, suit might not change
-                        card.setSuit(SUITS[(int) (Math.random() * SUITS.length)]);
-                        // Print out what the suit was changed to
-                        System.out.println("Suit changed to " + card.getSuit());
-                        playerEnergy--;
-                        window.repaint();
-                        // Print the hand and subtract one from energy
-                        printHands();
-                    }
-                }
-
-                // if they chose to pass, give the user one bonus point and take one energy point away
-                else if (choice.equals("3")) {
-                    System.out.println("You passed. +1 bonus point");
-                    bonus ++;
-                    playerEnergy --;
-                    printHands();
-                }
-
-                // Reprompt the user to insert new number
-                else {
-                    System.out.println("Invalid Choice. Please pick 1, 2, or 3.");
-                }
-
-
+            if (choice.equals("1")) {
+                playerPowerUp();
+            } else if (choice.equals("2")) {
+                playerSuitChange();
+            } else if (choice.equals("3")) {
+                bonus++;
+                playerEnergy--;
             }
-            // Returns the amount of bonus points the user accumulated
-            return bonus;
+
+            // Reprompt the user to insert new number
+            else {
+                System.out.println("Invalid Choice. Please pick 1, 2, or 3.");
+            }
+            window.repaint();
+
+        }
+        return bonus;
     }
+
+    private void playerPowerUp() {
+        System.out.println("Choose card index (1-3)");
+        int choice = sc.nextInt() - 1;
+        sc.nextLine();
+
+        if (isValidIndex(choice)) {
+            // Get the card index they want to power up
+            Card card = player.getCard(choice);
+
+            int maxAdd = MAX_CARD_VALUE - card.getValue();
+            if (maxAdd > 0) {
+                int add = (int) (Math.random() * maxAdd) + 1;
+                card.powerUp(add);
+            }
+            playerEnergy--;
+
+
+        }
+    }
+
+        private void playerSuitChange() {
+            System.out.println("Choose card index (1-3");
+            int choice = sc.nextInt() - 1;
+            sc.nextLine();
+
+            if (isValidIndex(choice)) {
+                // Get the card index they want to power up
+                Card card = player.getCard(choice);
+                // Set the suit to a random suit, suit might not change
+                card.setSuit(SUITS[(int) (Math.random() * SUITS.length)]);
+                playerEnergy--;
+            }
+        }
+
+        private boolean isValidIndex(int index) {
+            return index >= 0 && index < CARDS_PER_HAND;
+        }
 
     private int computerTurn() {
             // Computer starts at 3 energy points, and zero bonus points
 
             int bonus = 0;
-            // Print the computer's hand
-            printComputerHands();
-
 
 
         // While the computer still has energy points
             while (computerEnergy > 0) {
-                // Get all three cards in the computer's hand
-                Card c1 = computer.getCard(0);
-                Card c2 = computer.getCard(1);
-                Card c3 = computer.getCard(2);
-                // Find the score of the computer's current hand
-                int handScore = HandRanking.evaluate(computer.getHand());
-
                 // If the computer currently has a score above 3, the computer will pass
-                if (handScore > 3) {
+                if (shouldPass()) {
                     // Gets one bonus point, loses one energy one, and prints out hand
                     System.out.println("Computer passes. ");
-                    bonus ++;
+                    bonus++;
                     computerEnergy--;
                     printComputerHands();
-                }
-
-                else if(handScore == 3) {
-                    // If hand score is 3, which means it has a pair
-
-                    // Computer will try to get a 3 of a kind. This means changing value of only one not the same
-                    if (c1.getValue() != c2.getValue() && c1.getValue() != c3.getValue()) {
-                        int maxAdd = 13 - c1.getValue();
-                        if (maxAdd > 0) {
-                            int add = (int) (Math.random() * maxAdd) + 1;
-                            System.out.println("Computer changed a card to improve their pair.");
-                            c1.powerUp(add);
-
-                            System.out.println("Computer powered up a card to try for a three of a kind.");
-                            printComputerHands();
-                        }
-                    }
-                    else if (c2.getValue() != c1.getValue() && c2.getValue() != c3.getValue()) {
-                        int maxAdd = 13 - c2.getValue();
-                        if (maxAdd > 0) {
-                            int add = (int) (Math.random() * maxAdd) + 1;
-                            System.out.println("Computer changed a card to improve their pair.");
-                            c2.powerUp(add);
-
-                            System.out.println("Computer powered up a card to try for a three of a kind.");
-                            printComputerHands();
-                        }
-                    }
-                    else if (c3.getValue() != c1.getValue() && c3.getValue() != c2.getValue()) {
-                        int maxAdd = 13 - c3.getValue();
-                        if (maxAdd > 0) {
-                            int add = (int) (Math.random() * maxAdd) + 1;
-                            System.out.println("Computer changed a card to improve their pair.");
-                            c3.powerUp(add);
-
-                            System.out.println("Computer powered up a card to try for a three of a kind.");
-                            printComputerHands();
-                        }
-                    }
-                    // Computer loses an energy point
-
+                } else if (tryImproveThreeOfAKind()) {
                     computerEnergy--;
-                    window.repaint();
-                }
-
-                // If the computer is one away from a flush
-                else if (oneAwayFromFlush(computer.getHand())) {
-
-
-                    // Check to see which card needs to be changed to get the flush
-                    // Then try to change it in order to get that flush
-                    if (!c1.getSuit().equals(c2.getSuit()) && !c1.getSuit().equals(c3.getSuit())) {
-                        c1.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-
-                        System.out.println("Computer changed a card's suit to try for a flush.");
-                        printComputerHands();
-                    } else if (!c2.getSuit().equals(c1.getSuit()) && !c2.getSuit().equals(c3.getSuit())) {
-                        c2.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-
-                        System.out.println("Computer changed a card's suit to try for a flush.");
-                        printComputerHands();
-                    } else if (!c3.getSuit().equals(c1.getSuit()) && !c3.getSuit().equals(c2.getSuit())) {
-                        c3.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-
-                        System.out.println("Computer changed a card's suit to try for a flush.");
-                        printComputerHands();
-                    }
-
-                    // Uses an energy point
-
+                } else if (tryCompleteFlush()) {
                     computerEnergy--;
-                    window.repaint();
+                } else {
+                    randomComputerMove();
+                    computerEnergy--;
                 }
 
-                else {
-                    // Otherwise, the computer does a random move
-                    int choice = (int)(Math.random() * 3) +1;
-
-                    // If random move is 1
-                    // Powers up a card by adding to its value
-                    if (choice == 1) {
-                        int index = (int)(Math.random() * 3);
-                        Card card = computer.getCard(index);
-                        int add = (int)(Math.random() * (13 - card.getValue()));
-                        card.powerUp(add);
-
-                        System.out.println("The computer powered up a card. ");
-                        // Loses one energy point and prints out hand
-                        computerEnergy -- ;
-                        printComputerHands();
-                    }
-
-                    // Otherwise if choice is two
-                    // Change a random suit
-                    else if (choice == 2) {
-                        int index = (int)(Math.random() * 3);
-                        Card card = computer.getCard(index);
-                        card.setSuit(SUITS[(int)(Math.random() * SUITS.length)]);
-
-                        System.out.println("The computer changed one of its suits");
-                        // Subtract an energy point
-                        // print out the computer hands
-                        computerEnergy --;
-                        printComputerHands();
-                    }
-                    else{
-                        // Otherwise the computer passed
-                        // Gets one bonus point and loses energy
-                        // Print out hand
-                        System.out.println("The computer passed");
-                        bonus ++;
-                        computerEnergy --;
-                        printComputerHands();
-                    }
-                    window.repaint();
-                }
-                System.out.println("Press Enter to continue...");
-                sc.nextLine();
+                window.repaint();
+                waitForEnter();
             }
-            // Returns the bonus the computer has accumulated
+                return bonus;
+    }
 
-        return bonus;
+    private boolean shouldPass() {
+        return HandRanking.evaluate(computer.getHand()) > 3;
+    }
+
+    private boolean tryImproveThreeOfAKind() {
+        if (HandRanking.evaluate(computer.getHand()) != 3) {
+            return false;
+        }
+
+        Card c1 = computer.getCard(0);
+        Card c2 = computer.getCard(1);
+        Card c3 = computer.getCard(2);
+
+        if (c1.getValue() != c2.getValue() && c1.getValue() != c3.getValue()) {
+            powerUp(c1);
+            return true;
+        }
+        else if (c2.getValue() != c1.getValue() && c2.getValue() != c3.getValue()) {
+            powerUp(c2);
+            return true;
+        }
+        else if (c3.getValue() != c1.getValue() && c3.getValue() != c2.getValue()) {
+            powerUp(c3);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean tryCompleteFlush() {
+        if (!oneAwayFromFlush(computer.getHand())) {
+            return false;
+        }
+
+        Card c1 = computer.getCard(0);
+        Card c2 = computer.getCard(1);
+        Card c3 = computer.getCard(2);
+
+        if (!c1.getSuit().equals(c2.getSuit()) && !c1.getSuit().equals(c3.getSuit())){
+            c1.setSuit(randomSuit());
+            return true;
+        }
+
+        else if (!c2.getSuit().equals(c1.getSuit()) && !c2.getSuit().equals(c3.getSuit())){
+            c2.setSuit(randomSuit());
+            return true;
+        }
+
+        else if (!c3.getSuit().equals(c1.getSuit()) && !c3.getSuit().equals(c2.getSuit())){
+            c3.setSuit(randomSuit());
+            return true;
+        }
+        return false;
+    }
+
+    private void randomComputerMove() {
+        int choice = (int) (Math.random() * 3) + 1;
+        int index = (int) (Math.random() * CARDS_PER_HAND);
+
+        Card card = computer.getCard(index);
+
+        if (choice == 1) {
+            powerUp(card);
+        } else if (choice == 2) {
+            card.setSuit(randomSuit());
+        }
+
+    }
+
+    private void powerUp(Card card) {
+        int maxAdd = MAX_CARD_VALUE - card.getValue();
+        if (maxAdd > 0) {
+            card.powerUp((int)(Math.random() * maxAdd) + 1);
+        }
+    }
+
+    private String randomSuit() {
+        return SUITS[(int)(Math.random() * SUITS.length)];
     }
 
     private boolean oneAwayFromFlush(ArrayList<Card> hand) {
@@ -501,6 +420,11 @@ public class Game {
             player.addPoints(playerScore);
             computer.addPoints(computerScore);
 
+    }
+
+    private void endGame() {
+        gameOver = true;
+        window.repaint();
     }
 
     public Player getPlayer() {

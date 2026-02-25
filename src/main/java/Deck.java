@@ -1,25 +1,38 @@
+// Card Game by Ryan Weinswig
+// February 25
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Deck {
     private ArrayList<Card> cards;
     private int cardsLeft;
 
-    public Deck(String[] ranks, String[] suits, int[] values, GameViewer window) {
+    // Creates a full deck with the provided ranks, suits, and values
+    // Reshuffles the deck after creation
+    public Deck(String[] ranks, String[] suits, int[] values, GameViewer viewer) {
         cards = new ArrayList<Card>();
-        // Go through and add all the suits and values
+        buildDeck(ranks, suits, values, viewer);
 
-    for (int x=1; x<=4;x++) {
-        for (int i=0; i< ranks.length; i++) {
-            cards.add(new Card(suits[x-1], values[i], i*4+x, window));
+    cardsLeft = cards.size();
+    shuffle();
+    }
 
+    // Goes through all the suits and values and adds the cards to the deck
+    private void buildDeck(String[] ranks, String[] suits, int[] values, GameViewer viewer) {
+        for (int suitIndex = 0; suitIndex < suits.length; suitIndex++) {
+            for (int rankIndex = 0; rankIndex < ranks.length; rankIndex++ ) {
+                int imageNumber = calculateImageNumber(rankIndex, suitIndex);
+                cards.add(new Card(suits[suitIndex], values[rankIndex], imageNumber, viewer));
+            }
         }
     }
 
-    // Amount of cards
-    cardsLeft = cards.size();
-    shuffle();
+    // Calculates the correct image number based on rank and suit
+    private int calculateImageNumber(int rankIndex, int suitIndex) {
+        return rankIndex * 4 + (suitIndex + 1);
     }
 
     // Check if the no undealt cards remain
@@ -42,16 +55,10 @@ public class Deck {
         return cards.get(cardsLeft);
     }
 
+    // Randomly shuffles the deck using the Collections utility
+    // Sets the cardsLeft to the full deck size
     public void shuffle() {
-        for (int i=cards.size() - 1; i>=0; i--) {
-            int random = (int)(Math.random() * (i+1));
-
-            // this is where we want to swap cards[i] and cards[random]
-            Card temp = cards.get(i);
-            cards.set(i, cards.get(random));
-            cards.set(random, temp);
-        }
-        // Want to reset the number of cards remaining back to the full deck
+        Collections.shuffle(cards);
         cardsLeft = cards.size();
     }
 
