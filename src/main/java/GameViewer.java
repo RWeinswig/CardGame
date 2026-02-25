@@ -18,6 +18,7 @@ public class GameViewer extends JFrame {
     private Image deckImage = new ImageIcon("src/main/resources/53.png").getImage();
 
 
+    //
     public GameViewer(Game game) {
 
         this.game = game;
@@ -33,12 +34,16 @@ public class GameViewer extends JFrame {
         g.setColor(Color.WHITE);
       g.fillRect(0, 0, getWidth(), getHeight());
 
+      // Check to see if at the beginning of the game and we need to draw instructions
+       // Want to check this first since this is the first thing that should happen whether the user plays or not
         if (showInstructions) {
             drawInstructions(g);
         }
+        // Otherwise check to see if the game has ended and the user has lost
         else if (game.isGameOver()) {
             drawGameOver(g);
         }
+        // Only print out the cards and hands if the user has a hand and cards
         else if (game.getPlayer() != null && !game.getPlayer().getHand().isEmpty()){
             drawGame(g);
         }
@@ -79,7 +84,7 @@ public class GameViewer extends JFrame {
            g2.setColor(new Color(212, 175, 55)); // gold
            // Width of the stroke
            g2.setStroke(new BasicStroke(6));
-
+           //
            int width = 150 * game.getComputer().getHand().size();
            g2.drawRect(startX - 20, computerY - 30, width + 40, 150);
        }
@@ -102,96 +107,121 @@ public class GameViewer extends JFrame {
            card.draw(g, true);
        }
 
+       // If the player won the round
        if (game.getRoundWinner().equals("PLAYER")) {
-           g2.setColor(new Color(212, 175, 55)); // gold
+           // gold
+           g2.setColor(new Color(212, 175, 55));
            g2.setStroke(new BasicStroke(6));
 
+           // Draw the golden box the width around the user's hand depending on how many cards are in their hand
            int width = 150 * game.getPlayer().getHand().size();
            g2.drawRect(startX - 20, playerY - 30, width + 40, 150);
        }
 
-
-
+       // This is the x and y coordinates for the deck in the middle
        int deckX = getWidth() / 2 - 50;
        int deckY = getHeight() / 2 - 50;
 
+       // We need to keep track of the original rotation in order to ensure that when we print out new cards they will be in the correct direction
        AffineTransform old = g2.getTransform();
+       // This allows us to rotate the cards in the deck sideways
        g2.rotate(Math.toRadians(90), deckX + 50, deckY + 50);
+
+       // Draws three cards slightly shifted from each other to give the appearance that there are multiple cards
        for (int i = 0; i < 3; i++) {
            g2.drawImage(deckImage, deckX + i*3, deckY + i*3, 100, 100, this);
        }
+       // Reset the transformation back to normal
        g2.setTransform(old);
    }
 
     public void drawScoreboard(Graphics g, int playerScore, int computerScore, int round) {
-        int bottom = getHeight() - 50;
-        int top = 50;
+        // The margin is the space we want to have from the borders
+        int MARGIN = 50;
+        // Want to have the highest and loest points 50 pixels away from the borders
+        int bottom = getHeight() - MARGIN;
+        int top = MARGIN;
+        // The bar refers to the bar in the scoreboard that visualizes the current scoreboard
         int barMaxHeight = bottom - top;
+        // I set the max score to 100, which is a little bit higher than the actual max score, but makes it an easy number to work with
         int MAX_SCORE = 100;
 
-
-
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(600, 80, 300, 160);
-        g.setColor(Color.WHITE);
-        g.drawRect(600, 80, 300, 160);
+        // Prints out the scoreboard and the other text around it
         g.setColor(Color.BLACK);
         g.setFont(new Font("SansSerif", Font.BOLD, 18));
         g.drawString("=== SCOREBOARD ===", 700, 100);
         g.setFont(new Font("SansSerif", Font.BOLD, 16));
-        g.setColor(Color.CYAN);
+        g.setColor(Color.ORANGE);
         g.drawString("Round: " + round, 700, 130);
         g.setColor(Color.GREEN);
         g.drawString(game.getPlayer().getName() + ": " + playerScore, 650, 170);
         g.setColor(Color.RED);
         g.drawString("Computer: " + computerScore, 650, 200);
 
+        // This creates the height for both the player's and the computer's bars
+        // This does it by dividing the scores by the max possible score and then multiplying it by the max height of the bar
         int playerHeight = (int)((playerScore / (double)MAX_SCORE) * barMaxHeight);
         int computerHeight = (int)((computerScore / (double)MAX_SCORE) * barMaxHeight);
-        g.setColor(Color.GREEN);
 
+        // Player's bar
+        g.setColor(Color.GREEN);
         g.fillRect(650, bottom - playerHeight, 60, playerHeight);
+        // Computer's bar
         g.setColor(Color.RED);
         g.fillRect(750, bottom - computerHeight, 60, computerHeight);
 
     }
 
+    // Method to draw the ending animation
     public void drawGameOver(Graphics g) {
+        // Casts g object to more advanced 2d version, in order to access stroke width
         Graphics2D g2 = (Graphics2D) g;
 
+        // Get the scores of both the user and the computer
         int playerScore = game.getPlayer().getPoints();
         int computerScore = game.getComputer().getPoints();
 
+        // Creates a black background for more contrast
         g.setColor(Color.BLACK);
         g.fillRect(0,0,getWidth(), getHeight());
 
+        // Prints out that the game is over
         g.setColor(Color.WHITE);
         g.setFont(new Font ("SansSerif", Font.BOLD, 60));
         g.drawString("GAME OVER", 320, 150);
 
+        // Prints out the scores of the user and of the computer
         g.setFont(new Font("SansSerif", Font.BOLD, 30));
         g.drawString(game.getPlayer().getName() + ": " + playerScore, 350, 300);
         g.drawString("Computer: " + computerScore, 350, 350);
 
+        // Store both a playerWon and computerWon boolean
+        // We need both in order to check if there is a tie or not
         boolean playerWon = playerScore > computerScore;
         boolean computerWon = computerScore > playerScore;
 
+        // Set the stroke width of the golden rectangles that surround both scores
         g2.setStroke(new BasicStroke(8));
+        // Set the color to gold
         g2.setColor(new Color(212, 175, 55));
-
+        // Draw the rectangles to surround both scores
         g2.drawRect(300, 260, 400, 60);
-        g.setFont(new Font("SansSerif", Font.BOLD, 40));
-        if (playerWon) {
 
+        // Print out which player won
+        g.setFont(new Font("SansSerif", Font.BOLD, 40));
+        // If the player won
+        if (playerWon) {
+            // Print out that they won
             g.drawString(game.getPlayer().getName() + " WINS!", 350, 450);
         }
+        // Otherwise if the computer won
         else if (computerWon) {
-            g2.drawRect(300, 310, 400, 60);
-
+            // Print out that the computer won
             g.drawString("COMPUTER WINS!", 350, 450);
         }
+        // Otherwise
         else {
-
+            // Print out that it was a tie
             g.drawString("IT'S A TIE!", 380, 450);
         }
 
@@ -215,7 +245,10 @@ public class GameViewer extends JFrame {
     }
 
     public void hideInstructions() {
+        // If given the message to hide the instructions
+        // Set the variable show Instructions to false
         showInstructions = false;
+        // Repaint the window now without the instructions
         repaint();
     }
 }
