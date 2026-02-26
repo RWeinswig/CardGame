@@ -306,7 +306,9 @@ public class Game {
                 }
                 // Otherwise the computer just makes a random move
                 else {
-                    randomComputerMove();
+                    if (randomComputerMove()) {
+                        bonus ++;
+                    }
                     computerEnergy--;
                 }
 
@@ -404,23 +406,38 @@ public class Game {
     }
 
     // Make a random computer move
-    private void randomComputerMove() {
+    private boolean randomComputerMove() {
 
+        // Make a random choice
         int choice = (int) (Math.random() * 3) + 1;
         int index = (int) (Math.random() * CARDS_PER_HAND);
 
+        // Get the index of the random choice
         Card card = computer.getCard(index);
 
+        // If the computer chose the first option
+        // Power up
         if (choice == 1) {
             powerUp(card);
-        } else if (choice == 2) {
+        }
+        // Otherwise, set suit to random suit
+        else if (choice == 2) {
             card.setSuit(randomSuit());
         }
+        // Otherwise, the computer passed and we should return true to get a bonus point
+        else{
+            System.out.println("Computer Passed");
+            return true;
+        }
+        return false;
 
     }
 
+    // Powers up the card
     private void powerUp(Card card) {
+        // Find he max we can add
         int maxAdd = MAX_CARD_VALUE - card.getValue();
+        // If the max add is greater than 0, add a ceartain value
         if (maxAdd > 0) {
             card.powerUp((int)(Math.random() * maxAdd) + 1);
         }

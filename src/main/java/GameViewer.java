@@ -1,3 +1,6 @@
+// Card Game by Ryan Weinswig
+// February 25
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -9,13 +12,42 @@ public class GameViewer extends JFrame {
     private Game game;
 
     // Height and Width of the board
-    private final int WINDOW_WIDTH = 1000;
-    private final int WINDOW_HEIGHT = 1000;
+    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_HEIGHT = 1000;
+
+    // Horizontal spacing between cards when drawn in a hand
+    private static final int CARD_SPACING = 150;
+
+    // Thickness of gold border drawn around winning hand
+    private static final int WINNER_BORDER_THICKNESS = 6;
+    // Horizontal padding added to the left and right of the winning hand box
+    private static final int WINNER_PADDING_X = 20;
+    // Vertical padding added above the winning hand
+    private static final int WINNER_PADDING_Y = 30;
+    // Height of the winner highlight box
+    private static final int WINNER_BOX_HEIGHT = 150;
+
+    // Margin from the top and bottom edges
+    private static final int SCOREBOARD_MARGIN = 50;
+    // Maximum possible score used to scale scoreboard bar
+    private static final int MAX_SCORE = 100;
+
+    // Number of overlapping cards drawn to visually represent the deck
+    private static final int DECK_STACK_COUNT = 3;
+    // Pixel offset between each stacked card
+    private static final int DECK_STACK_SHIFT = 3;
+
+    // Gold color
+    private static final Color GOLD = new Color(212, 175, 55);
+
+    // Deck size constants
+    private static final int DECK_WIDTH = 100;
+    private static final int DECK_HEIGHT = 100;
 
     // Used to determine when to show the Instructions
     private boolean showInstructions = true;
     // Gives us access to the image that represents the deck, or just the back image of a card
-    private Image deckImage = new ImageIcon("src/main/resources/53.png").getImage();
+    private static final Image deckImage = new ImageIcon("src/main/resources/53.png").getImage();
 
 
     //
@@ -72,7 +104,7 @@ public class GameViewer extends JFrame {
        // Draws the cards on the screen in the correct locations
        for (int i = 0; i < game.getComputer().getHand().size(); i++) {
            Card card = game.getComputer().getCard(i);
-           card.setPosition(startX + (i * 150), computerY);
+           card.setPosition(startX + (i * CARD_SPACING), computerY);
 
            card.draw(g, game.isRevealComputerCards());
        }
@@ -81,12 +113,12 @@ public class GameViewer extends JFrame {
        // This draws a golden box around their cards to signal they won
        if (game.getRoundWinner().equals("COMPUTER")) {
 
-           g2.setColor(new Color(212, 175, 55)); // gold
+           g2.setColor(GOLD); // gold
            // Width of the stroke
-           g2.setStroke(new BasicStroke(6));
+           g2.setStroke(new BasicStroke(WINNER_BORDER_THICKNESS));
            //
-           int width = 150 * game.getComputer().getHand().size();
-           g2.drawRect(startX - 20, computerY - 30, width + 40, 150);
+           int width = CARD_SPACING * game.getComputer().getHand().size();
+           g2.drawRect(startX - WINNER_PADDING_X, computerY - WINNER_PADDING_Y, width + (WINNER_PADDING_X * 2), WINNER_BOX_HEIGHT);
        }
 
 
@@ -102,7 +134,7 @@ public class GameViewer extends JFrame {
        // Draws all of the user's cards
        for (int i = 0; i < game.getPlayer().getHand().size(); i++) {
            Card card = game.getPlayer().getCard(i);
-           card.setPosition(startX + (i * 150), playerY);
+           card.setPosition(startX + (i * CARD_SPACING), playerY);
 
            card.draw(g, true);
        }
@@ -110,12 +142,12 @@ public class GameViewer extends JFrame {
        // If the player won the round
        if (game.getRoundWinner().equals("PLAYER")) {
            // gold
-           g2.setColor(new Color(212, 175, 55));
+           g2.setColor(GOLD);
            g2.setStroke(new BasicStroke(6));
 
            // Draw the golden box the width around the user's hand depending on how many cards are in their hand
-           int width = 150 * game.getPlayer().getHand().size();
-           g2.drawRect(startX - 20, playerY - 30, width + 40, 150);
+           int width = CARD_SPACING * game.getPlayer().getHand().size();
+           g2.drawRect(startX - WINNER_PADDING_X, playerY - WINNER_PADDING_Y, width + (WINNER_PADDING_X * 2), WINNER_BOX_HEIGHT);
        }
 
        // This is the x and y coordinates for the deck in the middle
@@ -128,23 +160,21 @@ public class GameViewer extends JFrame {
        g2.rotate(Math.toRadians(90), deckX + 50, deckY + 50);
 
        // Draws three cards slightly shifted from each other to give the appearance that there are multiple cards
-       for (int i = 0; i < 3; i++) {
-           g2.drawImage(deckImage, deckX + i*3, deckY + i*3, 100, 100, this);
+       for (int i = 0; i < DECK_STACK_COUNT; i++) {
+           g2.drawImage(deckImage, deckX + i*DECK_STACK_SHIFT, deckY + i*DECK_STACK_SHIFT, DECK_WIDTH, DECK_HEIGHT, this);
        }
        // Reset the transformation back to normal
        g2.setTransform(old);
    }
 
+   // Method visualizes the scoreboard
     public void drawScoreboard(Graphics g, int playerScore, int computerScore, int round) {
-        // The margin is the space we want to have from the borders
-        int MARGIN = 50;
-        // Want to have the highest and loest points 50 pixels away from the borders
-        int bottom = getHeight() - MARGIN;
-        int top = MARGIN;
-        // The bar refers to the bar in the scoreboard that visualizes the current scoreboard
+        // This is the lowest we want the box to go that draws the scoreboard
+        int bottom = getHeight() - SCOREBOARD_MARGIN;
+        // Highest y value we want to get to
+        int top = SCOREBOARD_MARGIN;
+        // This is the max height we want the bar to be
         int barMaxHeight = bottom - top;
-        // I set the max score to 100, which is a little bit higher than the actual max score, but makes it an easy number to work with
-        int MAX_SCORE = 100;
 
         // Prints out the scoreboard and the other text around it
         g.setColor(Color.BLACK);
@@ -203,7 +233,7 @@ public class GameViewer extends JFrame {
         // Set the stroke width of the golden rectangles that surround both scores
         g2.setStroke(new BasicStroke(8));
         // Set the color to gold
-        g2.setColor(new Color(212, 175, 55));
+        g2.setColor(GOLD);
         // Draw the rectangles to surround both scores
         g2.drawRect(300, 260, 400, 60);
 
