@@ -269,9 +269,10 @@ public class GameViewer extends JFrame {
         g.drawString("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)", 250, 250);
         g.drawString("  2. Change Suit", 250, 300);
         g.drawString("  3. Pass (+1 bonus point)", 250, 350);
-        g.drawString("• Hands are scored. Higher score wins the round.", 250, 400);
-        g.drawString("• After 5 rounds, highest total wins.", 250, 450);
-        g.drawString("•Please enter your name: ", 250, 500);
+        g.drawString("  4. Discard (Discard a card of your choice and draw a new card)", 250, 400);
+        g.drawString("• Hands are scored. Higher score wins the round.", 250, 450);
+        g.drawString("• After 5 rounds, highest total wins.", 250, 500);
+        g.drawString("•Please enter your name: ", 250, 550);
     }
 
     public void hideInstructions() {

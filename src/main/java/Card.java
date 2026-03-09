@@ -22,7 +22,6 @@ public class Card {
     private int x;
     private int y;
 
-
     private GameViewer viewer;
 
     // Creates a card with a given suit, value, and image number.
@@ -53,6 +52,10 @@ public class Card {
     public void setSuit(String suit) {
         this.suit = suit;
         updateImage();
+    }
+    public void discardCard(){
+
+
     }
 
 

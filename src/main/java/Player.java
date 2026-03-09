@@ -44,6 +44,9 @@ public class Player {
         hand.clear();
     }
 
+    public void clearCard(int location){
+        hand.remove(location);
+    }
     public String toString(){
         return name + " has " + points + " points. \n " + name + "'s cards: " + hand;
     }
