@@ -43,7 +43,10 @@ public class Player {
     public void clearHand() {
         hand.clear();
     }
-
+    // Discards and redraws new card at given location
+    public void clearCard(int location, Card newCard){
+        hand.set(location, newCard);
+    }
     public String toString(){
         return name + " has " + points + " points. \n " + name + "'s cards: " + hand;
     }
