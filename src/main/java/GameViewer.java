@@ -24,6 +24,8 @@ public class GameViewer extends JFrame {
     private static final int WINNER_PADDING_X = 20;
     // Vertical padding added above the winning hand
     private static final int WINNER_PADDING_Y = 30;
+    // X coordinate for the instruction
+    private static final int INSTRUCTIONS_X = 250;
     // Height of the winner highlight box
     private static final int WINNER_BOX_HEIGHT = 150;
 
@@ -262,17 +264,17 @@ public class GameViewer extends JFrame {
         g.setColor(Color.BLACK);
         Font instructionsFont = new Font("SansSerif", Font.PLAIN, 14);
         g.setFont(instructionsFont);
-        g.drawString("=== TRIAD TACTICS ===", 250, 50);
-        g.drawString("A 3-card battle game. Each round:", 250, 100);
-        g.drawString("• You and computer draw 3 cards.", 250, 150);
-        g.drawString("• You have 3 energy to spend:", 250, 200);
-        g.drawString("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)", 250, 250);
-        g.drawString("  2. Change Suit", 250, 300);
-        g.drawString("  3. Pass (+1 bonus point)", 250, 350);
-        g.drawString("  4. Discard (Discard a card of your choice and draw a new card)", 250, 400);
-        g.drawString("• Hands are scored. Higher score wins the round.", 250, 450);
-        g.drawString("• After 5 rounds, highest total wins.", 250, 500);
-        g.drawString("•Please enter your name: ", 250, 550);
+        g.drawString("=== TRIAD TACTICS ===", INSTRUCTIONS_X, 50);
+        g.drawString("A 3-card battle game. Each round:", INSTRUCTIONS_X, 100);
+        g.drawString("• You and computer draw 3 cards.", INSTRUCTIONS_X, 150);
+        g.drawString("• You have 3 energy to spend:", INSTRUCTIONS_X, 200);
+        g.drawString("  1. Power Up (+ random value to any card of your choice, you cannot subtract from a cards value)", INSTRUCTIONS_X, 250);
+        g.drawString("  2. Change Suit", INSTRUCTIONS_X, 300);
+        g.drawString("  3. Pass (+1 bonus point)", INSTRUCTIONS_X, 350);
+        g.drawString("  4. Discard (Discard a card of your choice and draw a new card)", INSTRUCTIONS_X, 400);
+        g.drawString("• Hands are scored. Higher score wins the round.", INSTRUCTIONS_X, 450);
+        g.drawString("• After 5 rounds, highest total wins.", INSTRUCTIONS_X, 500);
+        g.drawString("•Please enter your name: ", INSTRUCTIONS_X, 550);
     }
 
     public void hideInstructions() {
