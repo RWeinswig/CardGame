@@ -188,7 +188,6 @@ public class Game {
         // Run their turn while they have some energy points remaining
         while (playerEnergy > 0) {
             // Print out the user's energy points remaining for the round
-            System.out.println(player.getHand());
             System.out.println("Energy: " + playerEnergy);
             // User makes their selection of what they want to do with their energy point
             System.out.println("Make your selection. 1) Power Up 2) Change Suit 3) Pass 4) Discard");
@@ -225,19 +224,20 @@ public class Game {
         return bonus;
     }
     private void playerDiscard(){
-        // Prompts the user toe choose what card index they wish to disscard
+        // Prompts the user toe choose what card index they wish to discard
         System.out.println("Choose card index (1-3)");
         int choice = sc.nextInt() - 1;
         sc.nextLine();
+        // Ensures the choice is valid
         if (isValidIndex(choice)){
-            player.clearCard(choice);
-            player.addCard(deck.deal());
+            // Clears the card and replaces with a new card
+            player.clearCard(choice, deck.deal());
             playerEnergy--;
         }
+        // When user chooses out of bounds suggestion
         else{
             System.out.println("Out of bounds index! You wasted a turn!");
         }
-
     }
     // Method used when player chooses to power up
     private void playerPowerUp() {

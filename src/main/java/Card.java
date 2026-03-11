@@ -53,12 +53,6 @@ public class Card {
         this.suit = suit;
         updateImage();
     }
-    public void discardCard(){
-
-
-    }
-
-
     public void powerUp(int add) {
         setValue(value + add);
     }
