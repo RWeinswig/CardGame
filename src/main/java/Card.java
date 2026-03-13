@@ -1,6 +1,3 @@
-// Card Game by Ryan Weinswig
-// February 25
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,29 +8,22 @@ public class Card {
     private static Image backImage = new ImageIcon("src/main/resources/53.png").getImage();
     private static final String[] ranks = {"A","2","3","4","5","6","7","8","9","10","J","Q","K"};
 
-
     // Instance variables
     private int value;
     private String suit;
     private int number;
     private Image image;
 
-
     private int x;
     private int y;
 
-
     private GameViewer viewer;
 
-    // Creates a card with a given suit, value, and image number.
-    // Loads corresponding image
     public Card(String suit, int value, int number, GameViewer viewer) {
-
         this.suit = suit;
         this.value = value;
         this.number = number;
         this.viewer = viewer;
-
         updateImage();
     }
 
@@ -55,23 +45,17 @@ public class Card {
         updateImage();
     }
 
-
     public void powerUp(int add) {
         setValue(value + add);
     }
 
-    // Updates the card's image based on its current value and suit
-    // Uses rank index and suit index to calculate correct image filler
     public void updateImage() {
         int suitIndex = getSuitIndex();
         int rankIndex = value - 1;
-
         number = rankIndex * 4 + (suitIndex + 1);
-
         image = new ImageIcon("src/main/resources/" + number + ".png").getImage();
     }
 
-    // Returns the correct value depending on what suit the card is
     private int getSuitIndex() {
         switch (suit) {
             case "Spades": return 0;
@@ -87,8 +71,6 @@ public class Card {
         this.y = y;
     }
 
-    // Draws the card on the screen
-    // If the faceUp is false, draws the back of the card instead
     public void draw(Graphics g, boolean faceUp){
         if (faceUp) {
             g.drawImage(image, x, y, CARD_WIDTH, CARD_HEIGHT, viewer);
@@ -101,5 +83,4 @@ public class Card {
     public String toString() {
         return ranks[value - 1] + " of " + suit;
     }
-
 }

@@ -16,6 +16,11 @@ public class Player {
         points = 0;
         this.name = name;
     }
+
+    public void resetPoints() {
+        this.points = 0;
+    }
+
     public void addPoints(int pointsToAdd) {
         points += pointsToAdd;
     }
@@ -47,5 +52,4 @@ public class Player {
     public String toString(){
         return name + " has " + points + " points. \n " + name + "'s cards: " + hand;
     }
-
 }
