@@ -258,7 +258,7 @@ public class GameViewer extends JFrame {
 
     }
 
-    private void drawInstructions(Graphics g) {
+    public void drawInstructions(Graphics g) {
         g.setColor(Color.BLACK);
         Font instructionsFont = new Font("SansSerif", Font.PLAIN, 14);
         g.setFont(instructionsFont);

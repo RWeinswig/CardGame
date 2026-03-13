@@ -27,14 +27,16 @@ public class Game {
     private int computerEnergy;
 
     private Scanner sc;
+
+    // Gives backend access to frontend
+    private GameViewer window;
+
     // Gives access to the deck
     private Deck deck;
     // Gives access to the player
     private Player player;
     // Gives access to the computer
     private Player computer;
-    // Gives backend access to frontend
-    private GameViewer window;
 
 
     // Initializes the game, creates players, deck, scanner, and GUI
@@ -109,7 +111,9 @@ public class Game {
             revealComputerCards = true;
             window.repaint();
             // Wait for user to hit enter before going to the next step
-            waitForEnter();
+            if (waitForEnter()) {
+                restart();
+            }
 
             // Stores the amount of passes the user did during their turn for their bonus
             int computerBonus = computerTurn();
@@ -172,9 +176,19 @@ public class Game {
 
     // This cleans up code to make it less repetitive
     // Once the user hits enter, move to the next line
-    private void waitForEnter() {
+    private boolean waitForEnter() {
         System.out.println("Press Enter to continue...");
-        sc.nextLine();
+        String restart = sc.nextLine();
+        return checkRestart(restart);
+    }
+
+    public boolean checkRestart(String restart) {
+        if (restart.equals("restart")) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
@@ -536,6 +550,13 @@ public class Game {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void restart() {
+        hideHands();
+        window.drawInstructions(window.getGraphics());
+
+
     }
 
     // Create and play the game
