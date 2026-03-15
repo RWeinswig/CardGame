@@ -538,6 +538,21 @@ public class Game {
         return player;
     }
 
+    public void restartGame() {
+
+        player = new Player(player.getName());
+        computer = new Player("Computer");
+
+        deck.shuffle();
+
+        gameOver = false;
+        revealComputerCards = false;
+
+        new Thread(() -> playGame()).start();
+
+        window.repaint();
+    }
+
     // Create and play the game
     public static void main(String[] args) {
         Game game = new Game();
